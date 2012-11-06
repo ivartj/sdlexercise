@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdarg.h>
+#include <stdlib.h>
 
 #include <SDL.h>
 #include <GL/gl.h>
@@ -27,13 +27,13 @@ static void (*handlerfunc[256])(SDL_Event *ev) = {
 
 static void handlequit(SDL_Event *ev)
 {
-	exit(0);
+	quit();
 }
 
 static void handlekeydown(SDL_Event *ev)
 {
 	if(ev->key.keysym.sym == SDLK_q)
-		exit(0);
+		quit();
 }
 
 static void handleexpose(SDL_Event *ev)

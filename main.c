@@ -9,6 +9,16 @@
 
 const char *progname = "sdlapp";
 
+void quit(void)
+{
+	exit(EXIT_SUCCESS);
+}
+
+void fail(void)
+{
+	exit(EXIT_FAILURE);
+}
+
 int main(int argc, char *argv[])
 {
 	int err;

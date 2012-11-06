@@ -23,7 +23,7 @@ void warning(char *fmt, ...)
 void vfatal(char *fmt, va_list ap)
 {
 	vwarning(fmt, ap);
-	exit(EXIT_FAILURE);
+	fail();
 }
 
 void fatal(char *fmt, ...)
