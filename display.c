@@ -8,17 +8,19 @@
 
 #include "main.h"
 #include "error.h"
-#include "window.h"
+#include "display.h"
 #include "draw.h"
 
+#define START_WIDTH 640
+#define START_HEIGHT 480
+
+/* handlers */
 static void handlequit(SDL_Event *ev);
 static void handlekeydown(SDL_Event *ev);
 static void handleresize(SDL_Event *ev);
 
 static void redraw(void);
 
-#define START_WIDTH 640
-#define START_HEIGHT 480
 static int width   = START_WIDTH;
 static int mwidth  = START_WIDTH;
 static int height  = START_HEIGHT;
@@ -55,14 +57,15 @@ static void redraw(void)
 		wnd->pitch);
 	cairo_t *cr = cairo_create(srf);
 
-	draw(cr);
+	cairo_rectangle(cr, 0, 0, width, height);
+	cairo_clip(cr);
+	draw(cr, width, height);
 
 	cairo_destroy(cr);
 	cairo_surface_destroy(srf);
 	if(SDL_MUSTLOCK(wnd))
 		SDL_UnlockSurface(wnd);
 	SDL_Flip(wnd);
-	SDL_Delay(30);
 }
 
 static void handleresize(SDL_Event *ev)
@@ -88,7 +91,7 @@ static void handleresize(SDL_Event *ev)
 		wnd = SDL_SetVideoMode(mwidth, mheight, 32, sdlvideoflags);
 }
 
-void windowloop(void)
+void displayloop(void)
 {
 	SDL_Event ev;
 
@@ -98,12 +101,13 @@ void windowloop(void)
 				handlerfunc[ev.type](&ev);
 		}
 		redraw();
+		SDL_Delay(30);
 	}
 }
 
-void windowinit(void)
+void displayinit(void)
 {
-	spritenew(0, 0, SDL_GetTicks(), 30, 30, 0);
+	spritenew(0, 0, SDL_GetTicks(), 30, 30, 0xFF0000);
 	wnd = SDL_SetVideoMode(width, height, 32, sdlvideoflags);
 	if(wnd == NULL)
 		fatal("%s", SDL_GetError());

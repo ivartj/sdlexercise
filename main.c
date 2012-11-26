@@ -5,7 +5,7 @@
 
 #include "main.h"
 #include "error.h"
-#include "window.h"
+#include "display.h"
 
 const char *progname = "sdlapp";
 
@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
 	if(err)
 		fatal("%s", SDL_GetError());
 	atexit(SDL_Quit);
-	windowinit();
-	windowloop();
+	displayinit();
+	displayloop();
 
 	exit(0);
 }

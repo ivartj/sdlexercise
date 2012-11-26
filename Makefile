@@ -14,4 +14,4 @@ $(PROGNAME): $(OBJS)
 	$(CC) -c $(CFLAGS) $?
 
 clean:
-	rm -f $(OBJS) $(PROGNAME)
+	rm -f *.o $(PROGNAME)

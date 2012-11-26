@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include "draw.h"
+#include "display.h"
 
 typedef uint uint;
 typedef struct sprite_t sprite_t;
@@ -25,7 +26,7 @@ uint time;
 
 cairo_t *cr;
 
-void draw(cairo_t *crin)
+void draw(cairo_t *crin, uint32_t w, uint32_t h)
 {
 	int i;
 	sprite_t *iter;
@@ -58,9 +59,9 @@ static void setcolor(uint color)
 {
 	double r, g, b;
 
-	b = (double)(color & 0xFF) / 255;
-	g = (double)(color & 0xFF00 >> 8) / 255;
-	r = (double)(color & 0xFF0000 >> 16) / 255;
+	b = (double)(color & 0xFF) / 255.0;
+	g = (double)((color & 0xFF00) >> 8) / 255.0;
+	r = (double)((color & 0xFF0000) >> 16) / 255.0;
 	cairo_set_source_rgb(cr, r, g, b);
 }
 
