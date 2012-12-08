@@ -21,9 +21,7 @@ static SDL_Surface *createcanvas(int width, int height);
 static void redraw(void);
 
 static int width   = START_WIDTH;
-static int mwidth  = START_WIDTH;
 static int height  = START_HEIGHT;
-static int mheight = START_HEIGHT;
 static const int sdlvideoflags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
 static SDL_Surface *wnd = NULL;
 static SDL_Surface *canvas = NULL;
@@ -71,28 +69,11 @@ static void redraw(void)
 
 static void handleresize(SDL_Event *ev)
 {
-	/* In order to reduce flickering on resize, the SDL surface is only
-	 * resized when the window size transcends the mwidth, mheight
-	 * boundary. */
-
-	int changed;
-
 	width = ev->resize.w;
 	height = ev->resize.h;
-	changed = 0;
-	if(width > mwidth) {
-		mwidth = width;
-		changed = 1;
-	}
-	if(height > mheight) {
-		mheight = height;
-		changed = 1;
-	}
-	if(changed) {
-		SDL_FreeSurface(canvas);
-		canvas = createcanvas(mwidth, mheight);
-		wnd = SDL_SetVideoMode(mwidth, mheight, 32, sdlvideoflags);
-	}
+	SDL_FreeSurface(canvas);
+	canvas = createcanvas(width, height);
+	wnd = SDL_SetVideoMode(width, height, 32, sdlvideoflags);
 }
 
 void displayloop(void)
