@@ -19,12 +19,12 @@ struct sprite_t {
 static void drawsprite(sprite_t *s);
 static void setcolor(uint color);
 
-sprite_t **tbl = NULL;
-uint tblsize = 0;
-uint tblcap = 0;
-uint time;
+static sprite_t **tbl = NULL;
+static uint tblsize = 0;
+static uint tblcap = 0;
+static uint time;
 
-cairo_t *cr;
+static cairo_t *cr;
 
 void draw(cairo_t *crin, uint32_t w, uint32_t h)
 {
