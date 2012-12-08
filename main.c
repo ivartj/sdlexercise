@@ -2,10 +2,12 @@
 #include <stdlib.h>
 
 #include <SDL.h>
+#include <cairo/cairo.h>
 
 #include "main.h"
 #include "error.h"
 #include "display.h"
+#include "draw.h"
 
 const char *progname = "sdlapp";
 
@@ -28,6 +30,7 @@ int main(int argc, char *argv[])
 		fatal("%s", SDL_GetError());
 	atexit(SDL_Quit);
 	displayinit();
+	spritenew(0, 0, SDL_GetTicks(), 30, 30, 0xFF0000);
 	displayloop();
 
 	exit(0);

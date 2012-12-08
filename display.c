@@ -2,8 +2,6 @@
 #include <stdlib.h>
 
 #include <SDL.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <cairo/cairo.h>
 
 #include "main.h"
@@ -18,6 +16,7 @@
 static void handlequit(SDL_Event *ev);
 static void handlekeydown(SDL_Event *ev);
 static void handleresize(SDL_Event *ev);
+static SDL_Surface *createcanvas(int width, int height);
 
 static void redraw(void);
 
@@ -27,6 +26,7 @@ static int height  = START_HEIGHT;
 static int mheight = START_HEIGHT;
 static const int sdlvideoflags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
 static SDL_Surface *wnd = NULL;
+static SDL_Surface *canvas = NULL;
 
 static void (*handlerfunc[256])(SDL_Event *ev) = {
 	[SDL_QUIT] = handlequit,
@@ -47,14 +47,14 @@ static void handlekeydown(SDL_Event *ev)
 
 static void redraw(void)
 {
-	if(SDL_MUSTLOCK(wnd))
-		SDL_LockSurface(wnd);
+	if(SDL_MUSTLOCK(canvas))
+		SDL_LockSurface(canvas);
 	cairo_surface_t *srf = cairo_image_surface_create_for_data(
-		wnd->pixels,
-		CAIRO_FORMAT_RGB24,
-		wnd->w,
-		wnd->h,
-		wnd->pitch);
+		canvas->pixels,
+		CAIRO_FORMAT_ARGB32,
+		canvas->w,
+		canvas->h,
+		canvas->pitch);
 	cairo_t *cr = cairo_create(srf);
 
 	cairo_rectangle(cr, 0, 0, width, height);
@@ -63,8 +63,9 @@ static void redraw(void)
 
 	cairo_destroy(cr);
 	cairo_surface_destroy(srf);
-	if(SDL_MUSTLOCK(wnd))
-		SDL_UnlockSurface(wnd);
+	if(SDL_MUSTLOCK(canvas))
+		SDL_UnlockSurface(canvas);
+	SDL_BlitSurface(canvas, NULL, wnd, NULL);
 	SDL_Flip(wnd);
 }
 
@@ -87,8 +88,11 @@ static void handleresize(SDL_Event *ev)
 		mheight = height;
 		changed = 1;
 	}
-	if(changed)
+	if(changed) {
+		SDL_FreeSurface(canvas);
+		canvas = createcanvas(mwidth, mheight);
 		wnd = SDL_SetVideoMode(mwidth, mheight, 32, sdlvideoflags);
+	}
 }
 
 void displayloop(void)
@@ -105,9 +109,18 @@ void displayloop(void)
 	}
 }
 
+static SDL_Surface *createcanvas(int width, int height)
+{
+	return SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, 32,
+			0x00FF0000, 
+			0x0000FF00, 
+			0x000000FF, 
+			0x00000000);
+}
+
 void displayinit(void)
 {
-	spritenew(0, 0, SDL_GetTicks(), 30, 30, 0xFF0000);
+	canvas = createcanvas(width, height);
 	wnd = SDL_SetVideoMode(width, height, 32, sdlvideoflags);
 	if(wnd == NULL)
 		fatal("%s", SDL_GetError());
