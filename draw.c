@@ -6,7 +6,7 @@
 #include "draw.h"
 #include "display.h"
 
-typedef uint uint32;
+typedef uint32_t uint;
 typedef struct sprite_t sprite_t;
 struct sprite_t {
 	uint id;
